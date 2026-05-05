@@ -150,8 +150,20 @@ User clicks popup
 3. ~~Fix typos (`storge_cloud_sync`, `is_initial_valuies`)~~ ✅
 4. ~~Change `autocomplete` to `new-password`~~ ✅
 5. ~~Add password strength indicator~~ ✅
-6. Remove unused `toastr` import from background.js ✅
-7. Add `.editorconfig` ✅
+6. ~~Remove unused `toastr` import from background.js~~ ✅
+7. ~~Add `.editorconfig`~~ ✅
 8. Add Chrome-specific webpack config ⬜
 9. Add basic GitHub Actions workflow ⬜
 10. Improve binary string efficiency in password.js ⬜
+
+---
+
+## Build & Test Verification (2026-05-06)
+
+```
+npm run build:chrome    → ✅ webpack 5.98.0 compiled successfully in 4002 ms
+npm run build:firefox   → ✅ webpack 5.98.0 compiled successfully in 4022 ms
+npm test                → ✅ 4 suites, 10 tests passed
+dist/chrome/            → ✅ All expected files present
+dist/firefox/           → ✅ All expected files present
+```
