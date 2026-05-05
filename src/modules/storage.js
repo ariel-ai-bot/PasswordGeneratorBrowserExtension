@@ -18,7 +18,7 @@ export class StorageManager {
             'bool', // remember_master_password
             'bool', // auto_search_history
             'bool', // hide_generated_pw
-            'bool', // storge_cloud_sync
+           'bool', // storage_cloud_sync
             'int',  // forgot_password
             'int',  // max_history
         ];
@@ -30,7 +30,7 @@ export class StorageManager {
             remember_master_password: false,                       // if need to save it to storage and load it at startup
             auto_search_history: true,                             // if need to automatically search history (same salt) and fill the form
             hide_generated_pw: false,                              // if need to hide generated password in ui
-            storge_cloud_sync: true,                               // if need to sync with cloud
+            storage_cloud_sync: true,                               // if need to sync with cloud
             forgot_password: 20,                                   // forgot master password in memory (unit: seconds)
             max_history: 100,                                      // max number of saved history
         };
@@ -61,7 +61,7 @@ export class StorageManager {
             this.settings.remember_master_password,
             this.settings.auto_search_history,
             this.settings.hide_generated_pw,
-            this.settings.storge_cloud_sync,
+            this.settings.storage_cloud_sync,
             this.settings.forgot_password,
             this.settings.max_history,
         ]); // base64 string
@@ -78,7 +78,7 @@ export class StorageManager {
         this.settings.remember_master_password = unpacked[4];
         this.settings.auto_search_history = unpacked[5];
         this.settings.hide_generated_pw = unpacked[6];
-        this.settings.storge_cloud_sync = unpacked[7];
+           this.settings.storage_cloud_sync = unpacked[7];
         this.settings.forgot_password = unpacked[8];
         this.settings.max_history = unpacked[9];
     }
@@ -167,7 +167,7 @@ export class StorageManager {
         } else {
             // load cloud data
             await this.loadSettingsAndHistory(cloud_data);
-            if (!this.settings.storge_cloud_sync) {
+            if (!this.settings.storage_cloud_sync) {
                 // save cloud data to local
                 await this.saveStorageToLocal();
                 // clear cloud data

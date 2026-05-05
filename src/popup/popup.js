@@ -12,10 +12,24 @@ console.log('===== popup.js loaded =====', new Date().toISOString());
 
 var freeze_generate_password_event = false;
 async function send_generate_password(mode=0) {
-    // mode: 0 = don't save in history, 1 = save in history
+    // mode: 0 = don't save in history, 1 = save in history, 2 = save + copy
     if (freeze_generate_password_event) return;
-    let response = chrome.runtime.sendMessage({ type: 'GENERATE_PASSWORD', mode: mode });
-    return response;
+    return new Promise((resolve, reject) => {
+        try {
+            chrome.runtime.sendMessage(
+                { type: 'GENERATE_PASSWORD', mode: mode },
+                response => {
+                    if (chrome.runtime.lastError) {
+                        reject(chrome.runtime.lastError);
+                    } else {
+                        resolve(response);
+                    }
+                }
+            );
+        } catch (error) {
+            reject(error);
+        }
+    });
 }
 
 const AUTOFILL_OPTIONS = {
@@ -101,8 +115,54 @@ class PopupManager {
                 pw_element.value = message.data.password;
                 this.elements.checksumField.textContent = '['+message.data.checksum+']';
                 if (message.data.need_copy) this.copyPw();
+                // Update password strength meter
+                this.updateStrengthMeter(message.data.password, message.data.checksum);
             }
         });
+    }
+
+    updateStrengthMeter(password, checksum) {
+        const meter = document.getElementById('strengthMeter');
+        const label = document.getElementById('strengthLabel');
+        if (!meter || !label) return;
+
+        let strength = 0;
+        const length = password.length;
+        const charsetSize = new Set(password).size > 0 ? this.estimateCharsetSize(password) : 1;
+        const entropy = length * Math.log2(charsetSize);
+
+        if (entropy >= 20) strength = 25;
+        if (entropy >= 36) strength = 50;
+        if (entropy >= 60) strength = 75;
+        if (entropy >= 80) strength = 100;
+
+        meter.style.width = strength + '%';
+        if (strength <= 25) {
+            meter.style.backgroundColor = '#ef4444';
+            label.style.color = '#ef4444';
+            label.textContent = checksum === 'RANDOM' ? 'Weak' : 'Weak';
+        } else if (strength <= 50) {
+            meter.style.backgroundColor = '#f59e0b';
+            label.style.color = '#f59e0b';
+            label.textContent = checksum === 'RANDOM' ? 'Fair' : 'Fair';
+        } else if (strength <= 75) {
+            meter.style.backgroundColor = '#3b82f6';
+            label.style.color = '#3b82f6';
+            label.textContent = checksum === 'RANDOM' ? 'Good' : 'Good';
+        } else {
+            meter.style.backgroundColor = '#10b981';
+            label.style.color = '#10b981';
+            label.textContent = checksum === 'RANDOM' ? 'Strong' : 'Strong';
+        }
+    }
+
+    estimateCharsetSize(password) {
+        let size = 0;
+        if (/[0-9]/.test(password)) size += 10;
+        if (/[a-z]/.test(password)) size += 26;
+        if (/[A-Z]/.test(password)) size += 26;
+        if (/[^0-9a-zA-Z]/.test(password)) size += 32;
+        return size > 0 ? size : 1;
     }
 
     getKeywordFromUrl(domain){

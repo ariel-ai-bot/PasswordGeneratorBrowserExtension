@@ -6,8 +6,6 @@
 import { PWG } from '../modules/password.js';
 import { HistoryItem } from '../modules/history.js';
 import { StorageManager } from '../modules/storage.js';
-import { success } from 'toastr';
-
 var stateManager = null;
 
 class StateManager {
@@ -115,7 +113,7 @@ class StateManager {
 
     async checkAndSync(force_save=false) {
         if (this.storageManager!=null){
-            if (this.getSettings("storge_cloud_sync", false)){
+            if (this.getSettings("storage_cloud_sync", false)){
                 await this.storageManager.checkAndSync(force_save);
                 console.log('Synced storage to cloud');
             }
@@ -139,11 +137,17 @@ class StateManager {
         if (uppercase_checked){ charset += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';}
         if (lowercase_checked){ charset += 'abcdefghijklmnopqrstuvwxyz';}
         if (symbols_checked){ charset += symbols_char;}
+
+        // Use rejection sampling to eliminate modulo bias
+        // maxValid = largest multiple of charset.length that fits in 0-255
+        const maxValid = 256 - (256 % charset.length);
         for (let i = 0; i < length; i++) {
-            var byte = new Uint8Array(1);
-            crypto.getRandomValues(byte);
-            var randomIndex = byte[0] % charset.length;
-            password += charset.charAt(randomIndex);
+            let byte;
+            do {
+                byte = new Uint8Array(1);
+                crypto.getRandomValues(byte);
+            } while (byte[0] >= maxValid); // reject values that would cause bias
+            password += charset[byte[0] % charset.length];
         }
         this.sendPasswordResult(password, 'RANDOM', saved, map, mode);
     }

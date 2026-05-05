@@ -183,7 +183,7 @@ class OptionsManager {
             SMW.set_settings('hide_generated_pw', e.target.checked);
         });
         this.settingsUI.storge_cloud_sync.addEventListener('change', (e) => {
-            SMW.set_settings('storge_cloud_sync', e.target.checked);
+            SMW.set_settings('storage_cloud_sync', e.target.checked);
         });
         this.settingsUI.forgot_password.addEventListener('change', (e) => {
             let _v = parseInt(e.target.value);
