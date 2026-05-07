@@ -40,7 +40,7 @@ class OptionsManager {
             remember_master_password: document.getElementById('remember_master_password'),
             auto_search_history: document.getElementById('auto_search_history'),
             hide_generated_pw: document.getElementById('hide_generated_pw'),
-            storge_cloud_sync: document.getElementById('storge_cloud_sync'),
+            storage_cloud_sync: document.getElementById('storage_cloud_sync'),
             forgot_password: document.getElementById('forgot_password'),
             max_history: document.getElementById('max_history'),
         };
@@ -182,7 +182,7 @@ class OptionsManager {
         this.settingsUI.hide_generated_pw.addEventListener('change', (e) => {
             SMW.set_settings('hide_generated_pw', e.target.checked);
         });
-        this.settingsUI.storge_cloud_sync.addEventListener('change', (e) => {
+        this.settingsUI.storage_cloud_sync.addEventListener('change', (e) => {
             SMW.set_settings('storage_cloud_sync', e.target.checked);
         });
         this.settingsUI.forgot_password.addEventListener('change', (e) => {
@@ -264,7 +264,7 @@ class OptionsManager {
 
     parseParameters(history_dict) {
         let text = '';
-        if (!history_dict.is_initial_valuies){
+        if (!history_dict.is_initial_values){
             if (history_dict.numbersChecked){
                 text += '0-9';
             }

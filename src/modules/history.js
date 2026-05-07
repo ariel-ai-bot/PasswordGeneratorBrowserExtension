@@ -61,7 +61,7 @@ export class HistoryItem {
         this.packed_history_schema = SchemaCompressor.compressSchema(history_schema);
         const packer = new BitPacker();
         this.packed_history = packer.pack(history_schema, [
-            this.history.is_initial_valuies,
+            this.history.is_initial_values,
             this.history.lowercaseChecked,
             this.history.uppercaseChecked,
             this.history.numbersChecked,
