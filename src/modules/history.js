@@ -87,7 +87,7 @@ export class HistoryItem {
         const original_history_schema = SchemaCompressor.decompressSchema(split_parts[0]);
         const packer = new BitPacker();
         const unpacked = packer.unpack(original_history_schema, split_parts[1]);
-          this.history.is_initial_values = unpacked[0];
+        this.history.is_initial_values = unpacked[0];
         this.history.lowercaseChecked = unpacked[1];
         this.history.uppercaseChecked = unpacked[2];
         this.history.numbersChecked = unpacked[3];
@@ -117,7 +117,7 @@ export class HistoryItem {
     }
 
     setFromMap(_map) {
-          this.history.is_initial_values = false;
+        this.history.is_initial_values = false;
         this.history.lowercaseChecked = _map.lowercaseChecked;
         this.history.uppercaseChecked = _map.uppercaseChecked;
         this.history.numbersChecked = _map.numbersChecked;

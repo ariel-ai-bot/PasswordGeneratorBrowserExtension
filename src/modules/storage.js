@@ -18,7 +18,7 @@ export class StorageManager {
             'bool', // remember_master_password
             'bool', // auto_search_history
             'bool', // hide_generated_pw
-           'bool', // storage_cloud_sync
+            'bool', // storage_cloud_sync
             'int',  // forgot_password
             'int',  // max_history
         ];
@@ -78,7 +78,7 @@ export class StorageManager {
         this.settings.remember_master_password = unpacked[4];
         this.settings.auto_search_history = unpacked[5];
         this.settings.hide_generated_pw = unpacked[6];
-           this.settings.storage_cloud_sync = unpacked[7];
+        this.settings.storage_cloud_sync = unpacked[7];
         this.settings.forgot_password = unpacked[8];
         this.settings.max_history = unpacked[9];
     }
